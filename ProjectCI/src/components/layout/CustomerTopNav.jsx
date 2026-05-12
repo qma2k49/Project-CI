@@ -26,7 +26,7 @@ const CustomerTopNav = () => {
     };
 
     return (
-        <nav className="hidden md:flex sticky top-0 z-50 justify-between items-center w-full px-margin-desktop py-4 max-w-container-max-width mx-auto bg-surface shadow-[0px_4px_20px_rgba(45,52,54,0.08)]">
+        <nav className="flex sticky top-0 z-50 justify-between items-center w-full px-margin-desktop py-4 max-w-container-max-width mx-auto bg-surface shadow-[0px_4px_20px_rgba(45,52,54,0.08)]">
             <Link to="/" className="font-display-lg text-headline-md font-bold text-primary">The Discerning Host</Link>
             <ul className="flex items-center gap-8">
                 <li className="text-primary font-bold border-b-2 border-primary pb-1 cursor-pointer">
