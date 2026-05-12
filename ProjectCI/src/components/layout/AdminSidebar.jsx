@@ -42,28 +42,16 @@ const AdminSidebar = () => {
                         <span className="font-label-bold text-label-bold">Tables & Menu</span>
                     </Link>
                 </li>
-                <li>
-                    <a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
-                        <span className="material-symbols-outlined" data-icon="edit_note">edit_note</span>
-                        <span className="font-label-bold text-label-bold">Menu Editor</span>
-                    </a>
-                </li>
-                <li>
-                    <a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
-                        <span className="material-symbols-outlined" data-icon="analytics">analytics</span>
-                        <span className="font-label-bold text-label-bold">Analytics</span>
-                    </a>
-                </li>
             </ul>
             <div className="mt-auto px-2 border-t border-outline-variant pt-4 space-y-1">
                 <a className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
                     <span className="material-symbols-outlined" data-icon="help">help</span>
                     <span className="font-label-bold text-label-bold">Support</span>
                 </a>
-                <Link to="/" className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
+                {/* <Link to="/" className="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high rounded-lg mx-2 transition-all cursor-pointer">
                     <span className="material-symbols-outlined" data-icon="logout">logout</span>
                     <span className="font-label-bold text-label-bold">Logout</span>
-                </Link>
+                </Link> */}
             </div>
         </nav>
     );
