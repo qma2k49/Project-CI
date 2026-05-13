@@ -16,14 +16,8 @@ const AdminSidebar = () => {
                     </div>
                 </div>
             </div>
-            <div className="px-4 mb-6">
-                <button className="w-full bg-primary text-on-primary font-label-bold text-label-bold py-3 rounded-lg hover:bg-primary-container hover:text-on-primary-container transition-colors duration-200 flex items-center justify-center gap-2 ambient-shadow">
-                    <span className="material-symbols-outlined">add</span>
-                    New Reservation
-                </button>
-            </div>
+
             <ul className="flex-1 space-y-1 overflow-y-auto px-2">
-                {/* Active Tab: Dashboard */}
                 <li>
                     <Link to="/admin" className={`flex items-center gap-3 px-4 py-3 rounded-lg mx-2 transition-all ${location.pathname === '/admin' ? 'text-primary font-bold bg-primary-fixed dark:bg-on-primary-fixed-variant translate-x-1' : 'text-on-surface-variant hover:bg-surface-container-high'}`}>
                         <span className="material-symbols-outlined" style={location.pathname === '/admin' ? { fontVariationSettings: "'FILL' 1" } : {}}>dashboard</span>
