@@ -1,16 +1,20 @@
 const CustomerFooter = () => {
     return (
-        <footer className="w-full py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center max-w-container-max-width mx-auto bg-surface-container-low border-t border-outline-variant mt-auto">
-            <div className="font-display-lg text-body-lg font-bold text-primary mb-4 md:mb-0">The Discerning Host</div>
-            <div className="text-on-surface font-body-md text-body-md mb-4 md:mb-0 text-center md:text-left">
-                © 2024 The Discerning Host. All rights reserved.
+        <footer className="w-full py-6 px-6 md:px-12 bg-[#FAF9F6] border-t border-gray-200 mt-auto">
+            <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-xs md:text-sm gap-4">
+                <div className="font-bold text-[#C25E30] text-lg">The Discerning Host</div>
+                
+                <ul className="flex flex-wrap justify-center gap-6">
+                    <li className="text-gray-500 hover:text-[#C25E30] transition-colors cursor-pointer">Privacy Policy</li>
+                    <li className="text-gray-500 hover:text-[#C25E30] transition-colors cursor-pointer">Terms of Service</li>
+                    <li className="text-gray-500 hover:text-[#C25E30] transition-colors cursor-pointer">Contact Us</li>
+                    <li className="text-gray-500 hover:text-[#C25E30] transition-colors cursor-pointer">Careers</li>
+                </ul>
+
+                <div className="text-gray-500 text-center md:text-right">
+                    © 2024 The Discerning Host. All rights reserved.
+                </div>
             </div>
-            <ul className="flex flex-wrap justify-center gap-6">
-                <li className="text-on-surface-variant font-body-md text-caption hover:text-primary transition-colors cursor-pointer">Privacy Policy</li>
-                <li className="text-on-surface-variant font-body-md text-caption hover:text-primary transition-colors cursor-pointer">Terms of Service</li>
-                <li className="text-on-surface-variant font-body-md text-caption hover:text-primary transition-colors cursor-pointer">Contact Us</li>
-                <li className="text-on-surface-variant font-body-md text-caption hover:text-primary transition-colors cursor-pointer">Careers</li>
-            </ul>
         </footer>
     );
 };

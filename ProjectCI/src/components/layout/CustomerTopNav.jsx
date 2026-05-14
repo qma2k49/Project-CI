@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Modal, Input, message } from "antd";
+import { ShoppingCart, Bell } from "lucide-react";
 
 const CustomerTopNav = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const location = useLocation();
 
     const showModal = () => setIsModalOpen(true);
     const handleCancel = () => {
@@ -26,29 +28,38 @@ const CustomerTopNav = () => {
     };
 
     return (
-        <nav className="flex sticky top-0 z-50 justify-between items-center w-full px-margin-desktop py-4 max-w-container-max-width mx-auto bg-surface shadow-[0px_4px_20px_rgba(45,52,54,0.08)]">
-            <Link to="/" className="font-display-lg text-headline-md font-bold text-primary">The Discerning Host</Link>
-            <ul className="flex items-center gap-8">
-                <li className="text-primary font-bold border-b-2 border-primary pb-1 cursor-pointer">
+        <nav className="flex sticky top-0 z-50 justify-between items-center w-full px-6 md:px-12 py-4 max-w-7xl mx-auto bg-[#FAF9F6] border-b border-gray-200">
+            <Link to="/" className="text-xl md:text-2xl font-bold text-[#C25E30]">The Discerning Host</Link>
+            <ul className="hidden md:flex items-center gap-8">
+                <li className={`cursor-pointer transition-colors duration-200 ${location.pathname === '/' ? 'text-[#C25E30] font-bold border-b-2 border-[#C25E30] pb-1' : 'text-gray-500 font-medium hover:text-[#C25E30]'}`}>
                     <Link to="/">Menu</Link>
                 </li>
-                <li className="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 cursor-pointer">
+                <li className={`cursor-pointer transition-colors duration-200 ${location.pathname === '/booking' ? 'text-[#C25E30] font-bold border-b-2 border-[#C25E30] pb-1' : 'text-gray-500 font-medium hover:text-[#C25E30]'}`}>
                     <Link to="/booking">Reservations</Link>
                 </li>
-                <li className="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 cursor-pointer">Promos</li>
-                <li className="text-on-surface-variant font-body-md hover:text-primary transition-colors duration-200 cursor-pointer">Settings</li>
+                <li className="text-gray-500 font-medium hover:text-[#C25E30] transition-colors duration-200 cursor-pointer">Promos</li>
+                <li className="text-gray-500 font-medium hover:text-[#C25E30] transition-colors duration-200 cursor-pointer">Settings</li>
             </ul>
-            <div className="flex items-center gap-4 text-primary">
-                <Link to="/checkout">
-                    <span className="material-symbols-outlined cursor-pointer hover:text-primary-container transition-colors duration-200">shopping_cart</span>
+            <div className="flex items-center gap-5 text-[#C25E30]">
+                <Link to="/checkout" className="hover:text-orange-700 transition-colors">
+                    <ShoppingCart size={22} />
                 </Link>
-                <span className="material-symbols-outlined cursor-pointer hover:text-primary-container transition-colors duration-200">notifications</span>
+                <button className="hover:text-orange-700 transition-colors relative">
+                    <Bell size={22} />
+                    <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                </button>
                 
+                <img 
+                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" 
+                    alt="User Avatar" 
+                    className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm cursor-pointer"
+                />
+
                 <span 
                     onClick={showModal}
-                    className="font-body-md text-primary font-semibold cursor-pointer hover:text-primary-container transition-colors duration-200 border border-primary px-3 py-1 rounded-md"
+                    className="text-xs md:text-sm font-semibold cursor-pointer hover:bg-orange-50 transition-colors duration-200 border border-[#C25E30] px-2 py-1 rounded-md"
                 >
-                    Bạn là admin?
+                    Admin?
                 </span>
 
                 <Modal 
