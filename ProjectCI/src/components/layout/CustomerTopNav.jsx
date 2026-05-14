@@ -48,31 +48,26 @@ const CustomerTopNav = () => {
                     <Bell size={22} />
                     <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
                 </button>
-                
-                <img 
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" 
-                    alt="User Avatar" 
-                    className="w-9 h-9 rounded-full object-cover border-2 border-white shadow-sm cursor-pointer"
-                />
 
-                <span 
+
+                <span
                     onClick={showModal}
                     className="text-xs md:text-sm font-semibold cursor-pointer hover:bg-orange-50 transition-colors duration-200 border border-[#C25E30] px-2 py-1 rounded-md"
                 >
                     Admin?
                 </span>
 
-                <Modal 
-                    title="Xác thực Admin" 
-                    open={isModalOpen} 
-                    onOk={handleOk} 
+                <Modal
+                    title="Xác thực Admin"
+                    open={isModalOpen}
+                    onOk={handleOk}
                     onCancel={handleCancel}
                     okText="Xác nhận"
                     cancelText="Hủy"
                 >
                     <div className="py-4">
-                        <Input.Password 
-                            placeholder="Nhập mật khẩu..." 
+                        <Input.Password
+                            placeholder="Nhập mật khẩu..."
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             onPressEnter={handleOk}
