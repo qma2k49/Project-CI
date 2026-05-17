@@ -1,6 +1,8 @@
 import { Search, Plus, MapPin, Clock, Phone, Navigation } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { message } from "antd";
+import { useCart } from "../contexts/CartContext";
 
 const HomePage = () => {
     const [menuItems, setMenuItems] = useState([]);
@@ -8,6 +10,7 @@ const HomePage = () => {
     const [searching, setSearching] = useState("");
     const [activeCategory, setActiveCategory] = useState("Tất cả");
     const [showAll, setShowAll] = useState(false);
+    const { addToCart } = useCart();
 
     useEffect(() => {
         const fetchMenuItems = async () => {
@@ -62,11 +65,10 @@ const HomePage = () => {
                             <button
                                 key={cat}
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${
-                                    activeCategory === cat
+                                className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat
                                         ? "bg-[#C25E30] text-white"
                                         : "bg-[#F8EFEA] text-[#C25E30] hover:bg-[#F2E3D8]"
-                                }`}
+                                    }`}
                             >
                                 {cat}
                             </button>
@@ -123,7 +125,13 @@ const HomePage = () => {
                                             )}
                                             <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
                                                 <span className="text-[#C25E30] font-bold text-lg">{item.price}{String(item.price).includes('đ') ? '' : 'đ'}</span>
-                                                <button className="flex items-center gap-1 border border-[#C25E30] text-[#C25E30] hover:bg-[#FDF0E9] transition-colors px-3 py-1.5 rounded-full text-sm font-medium">
+                                                <button
+                                                    onClick={() => {
+                                                        addToCart(item);
+                                                        message.success(`Đã thêm "${item.title}" vào giỏ hàng!`);
+                                                    }}
+                                                    className="flex items-center gap-1 border border-[#C25E30] text-[#C25E30] hover:bg-[#FDF0E9] transition-colors px-3 py-1.5 rounded-full text-sm font-medium"
+                                                >
                                                     <Plus size={16} /> Thêm
                                                 </button>
                                             </div>
@@ -137,7 +145,7 @@ const HomePage = () => {
 
                 {filteredItems.length > 6 && (
                     <div className="flex justify-center mt-12">
-                        <button 
+                        <button
                             onClick={() => setShowAll(!showAll)}
                             className="border border-gray-400 text-gray-600 hover:text-gray-900 hover:border-gray-900 px-8 py-2.5 rounded-full text-sm font-medium transition-colors"
                         >

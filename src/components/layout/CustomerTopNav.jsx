@@ -2,12 +2,14 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Modal, Input, message } from "antd";
 import { ShoppingCart, Bell } from "lucide-react";
+import { useCart } from "../../contexts/CartContext";
 
 const CustomerTopNav = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
+    const { cartCount } = useCart();
 
     const showModal = () => setIsModalOpen(true);
     const handleCancel = () => {
@@ -41,8 +43,13 @@ const CustomerTopNav = () => {
                 <li className="text-gray-500 font-medium hover:text-[#C25E30] transition-colors duration-200 cursor-pointer">Settings</li>
             </ul>
             <div className="flex items-center gap-5 text-[#C25E30]">
-                <Link to="/checkout" className="hover:text-orange-700 transition-colors">
+                <Link to="/checkout" className="hover:text-orange-700 transition-colors relative">
                     <ShoppingCart size={22} />
+                    {cartCount > 0 && (
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full">
+                            {cartCount}
+                        </span>
+                    )}
                 </Link>
                 <button className="hover:text-orange-700 transition-colors relative">
                     <Bell size={22} />
