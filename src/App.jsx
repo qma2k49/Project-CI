@@ -4,6 +4,7 @@ import AdminLayout from "./layouts/AdminLayout";
 import HomePage from "./pages/HomePage";
 import BookingPage from "./pages/BookingPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import PromosPage from "./pages/PromosPage";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminTablesPage from "./pages/AdminTablesPage";
 import AdminOrdersPage from "./pages/AdminOrdersPage";
@@ -19,6 +20,7 @@ const App = () => {
                         <Route index element={<HomePage />} />
                         <Route path="booking" element={<BookingPage />} />
                         <Route path="checkout" element={<CheckoutPage />} />
+                        <Route path="promos" element={<PromosPage />} />
                     </Route>
 
                     <Route path="/admin" element={<AdminRoute />}>

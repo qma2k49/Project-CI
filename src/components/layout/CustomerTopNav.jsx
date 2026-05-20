@@ -39,7 +39,9 @@ const CustomerTopNav = () => {
                 <li className={`cursor-pointer transition-colors duration-200 ${location.pathname === '/booking' ? 'text-[#C25E30] font-bold border-b-2 border-[#C25E30] pb-1' : 'text-gray-500 font-medium hover:text-[#C25E30]'}`}>
                     <Link to="/booking">Reservations</Link>
                 </li>
-                <li className="text-gray-500 font-medium hover:text-[#C25E30] transition-colors duration-200 cursor-pointer">Promos</li>
+                <li className={`cursor-pointer transition-colors duration-200 ${location.pathname === '/promos' ? 'text-[#C25E30] font-bold border-b-2 border-[#C25E30] pb-1' : 'text-gray-500 font-medium hover:text-[#C25E30]'}`}>
+                    <Link to="/promos">Promos</Link>
+                </li>
                 <li className="text-gray-500 font-medium hover:text-[#C25E30] transition-colors duration-200 cursor-pointer">Settings</li>
             </ul>
             <div className="flex items-center gap-5 text-[#C25E30]">
