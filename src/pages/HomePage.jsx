@@ -1,8 +1,10 @@
 import { Search, Plus, MapPin, Clock, Phone, Navigation } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { message } from "antd";
+import { message, Spin, Input, Button, Tag, Empty, Card } from "antd";
 import { useCart } from "../contexts/CartContext";
+
+const CATEGORIES = ["Tất cả", "Khai vị", "Món chính", "Tráng miệng", "Đồ uống"];
 
 const HomePage = () => {
     const [menuItems, setMenuItems] = useState([]);
@@ -20,6 +22,7 @@ const HomePage = () => {
                 setMenuItems(data);
             } catch (error) {
                 console.error("Error fetching menu items:", error);
+                message.error("Không thể tải thực đơn. Vui lòng thử lại sau.");
             } finally {
                 setLoading(false);
             }
@@ -28,12 +31,9 @@ const HomePage = () => {
         fetchMenuItems();
     }, []);
 
-    const handleSearchChange = (e) => {
-        setSearching(e.target.value.toLowerCase());
-    }
-
     const filteredItems = menuItems.filter((item) => {
-        const matchesSearch = item.title.toLowerCase().includes(searching);
+        const q = searching.toLowerCase();
+        const matchesSearch = item.title.toLowerCase().includes(q);
         const matchesCategory = activeCategory === "Tất cả" || (item.tags && item.tags.includes(activeCategory));
         return matchesSearch && matchesCategory;
     });
@@ -41,170 +41,172 @@ const HomePage = () => {
     const displayedItems = showAll ? filteredItems : filteredItems.slice(0, 6);
 
     return (
-        <div className="font-body-md bg-[#FAF9F6] w-full max-w-7xl mx-auto md:px-12">
-            <div
-                className="relative w-full h-[500px] md:rounded-b-3xl bg-cover bg-center overflow-hidden mb-12"
+        <div className="w-full">
+            {/* Hero */}
+            <section
+                className="relative w-full h-[min(520px,70vh)] md:mx-4 md:mt-4 md:rounded-3xl overflow-hidden mb-10 md:mb-14"
                 style={{ backgroundImage: "url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=2000&q=80')" }}
             >
-                <div className="absolute inset-0 bg-black/50"></div>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-                    <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 max-w-2xl leading-tight">Trải Nghiệm Ẩm Thực Tinh Tế & Sang Trọng</h1>
-                    <p className="text-gray-200 text-sm md:text-base max-w-lg mb-8">Chào mừng đến với không gian ẩm thực hòa quyện cùng dịch vụ hoàn hảo, dành riêng cho những thực khách sành điệu.</p>
-                    <Link to="/booking">
-                        <button className="bg-[#C25E30] hover:bg-orange-800 text-white px-8 py-3 rounded-full font-semibold transition-colors">
-                            Đặt bàn ngay
-                        </button>
-                    </Link>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/45 to-black/25" />
+                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
+                    <Tag color="volcano" className="!mb-4 !px-3 !py-1 !text-xs !font-semibold !border-0 !rounded-full">
+                        Nhà hàng cao cấp
+                    </Tag>
+                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4 max-w-3xl leading-tight tracking-tight">
+                        Trải nghiệm ẩm thực tinh tế & sang trọng
+                    </h1>
+                    <p className="text-white/85 text-sm md:text-lg max-w-xl mb-8 leading-relaxed">
+                        Hương vị đặc sắc, không gian riêng tư và dịch vụ chuẩn mực — dành cho thực khách sành điệu.
+                    </p>
+                    <div className="flex flex-wrap gap-3 justify-center">
+                        <Link to="/booking">
+                            <Button type="primary" size="large" className="!h-12 !px-8 !rounded-full !font-semibold">
+                                Đặt bàn ngay
+                            </Button>
+                        </Link>
+                        <Link to="/promos">
+                            <Button size="large" ghost className="!h-12 !px-8 !rounded-full !text-white !border-white/60 hover:!bg-white/10">
+                                Xem ưu đãi
+                            </Button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            </section>
 
-            <div className="px-6 mb-16">
+            <div className="customer-page !pt-0">
                 <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8">
-                    <div className="flex flex-wrap items-center gap-3">
-                        {["Tất cả", "Khai vị", "Món chính", "Tráng miệng", "Đồ uống"].map((cat) => (
+                    <div className="flex flex-wrap gap-2">
+                        {CATEGORIES.map((cat) => (
                             <button
                                 key={cat}
+                                type="button"
                                 onClick={() => setActiveCategory(cat)}
-                                className={`px-5 py-2 rounded-full text-sm font-medium transition-colors ${activeCategory === cat
-                                        ? "bg-[#C25E30] text-white"
-                                        : "bg-[#F8EFEA] text-[#C25E30] hover:bg-[#F2E3D8]"
-                                    }`}
+                                className={activeCategory === cat ? "customer-chip-active" : "customer-chip-inactive"}
                             >
                                 {cat}
                             </button>
                         ))}
                     </div>
-                    <div className="flex items-center gap-3 w-full lg:w-auto">
-                        <div className="relative flex-1 lg:w-64">
-                            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                            <input
-                                onChange={handleSearchChange}
-                                type="text"
-                                placeholder="Tìm kiếm món ăn..."
-                                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-full bg-white outline-none focus:border-[#C25E30] text-sm"
-                            />
-                        </div>
-                        <button className="flex items-center gap-2 bg-[#F8EFEA] text-[#C25E30] px-4 py-2 rounded-full text-sm font-medium border border-[#EEDFCC]">
-                            <span className="material-symbols-outlined text-[18px]">tune</span>
-                            Bộ lọc
-                        </button>
-                    </div>
+                    <Input
+                        allowClear
+                        size="large"
+                        prefix={<Search size={16} className="text-on-surface-variant" />}
+                        placeholder="Tìm kiếm món ăn..."
+                        value={searching}
+                        onChange={(e) => setSearching(e.target.value)}
+                        className="!max-w-md !rounded-full"
+                    />
                 </div>
 
                 {loading ? (
-                    <div className="flex justify-center items-center py-12">
-                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#C25E30]"></div>
+                    <div className="flex flex-col items-center justify-center py-20 gap-3">
+                        <Spin size="large" />
+                        <p className="text-sm text-on-surface-variant">Đang tải thực đơn...</p>
                     </div>
+                ) : filteredItems.length === 0 ? (
+                    <Empty
+                        description="Không tìm thấy món phù hợp"
+                        className="py-16"
+                    >
+                        <Button type="primary" onClick={() => { setSearching(""); setActiveCategory("Tất cả"); }}>
+                            Xóa bộ lọc
+                        </Button>
+                    </Empty>
                 ) : (
-                    <>
-                        {filteredItems.length === 0 ? (
-                            <div className="text-center py-12 text-gray-500 w-full">
-                                Không tìm thấy món ăn nào phù hợp với bộ lọc của bạn.
-                            </div>
-                        ) : (
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {displayedItems.map((item) => (
-                                    <div key={item.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow flex flex-col">
-                                        <div className="relative h-48 sm:h-56 w-full bg-gray-100">
-                                            <img src={item.image && item.image !== '[URL]' ? item.image : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'} alt={item.title} className="w-full h-full object-cover" />
-                                            {item.badge && (
-                                                <div className="absolute top-4 left-4 bg-[#D4AF37] text-white text-xs font-bold px-3 py-1 rounded-full">
-                                                    {item.badge}
-                                                </div>
-                                            )}
-                                        </div>
-                                        <div className="p-5 flex-1 flex flex-col">
-                                            <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
-                                            <p className="text-gray-500 text-sm line-clamp-2 mb-3 flex-1">{item.desc}</p>
-                                            {item.tags && (
-                                                <div className="mb-4 flex flex-wrap gap-2">
-                                                    {(typeof item.tags === 'string' ? item.tags.split(',') : item.tags).map((tag, index) => (
-                                                        <span key={index} className="text-xs text-red-500 bg-red-50 px-2 py-1 rounded-md">{typeof tag === 'string' ? tag.trim() : tag}</span>
-                                                    ))}
-                                                </div>
-                                            )}
-                                            <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-50">
-                                                <span className="text-[#C25E30] font-bold text-lg">{item.price}{String(item.price).includes('đ') ? '' : 'đ'}</span>
-                                                <button
-                                                    onClick={() => {
-                                                        addToCart(item);
-                                                        message.success(`Đã thêm "${item.title}" vào giỏ hàng!`);
-                                                    }}
-                                                    className="flex items-center gap-1 border border-[#C25E30] text-[#C25E30] hover:bg-[#FDF0E9] transition-colors px-3 py-1.5 rounded-full text-sm font-medium"
-                                                >
-                                                    <Plus size={16} /> Thêm
-                                                </button>
-                                            </div>
-                                        </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+                        {displayedItems.map((item) => (
+                            <Card
+                                key={item.id}
+                                hoverable
+                                className="!customer-card !border-outline-variant/30 overflow-hidden"
+                                cover={
+                                    <div className="relative h-52 overflow-hidden">
+                                        <img
+                                            alt={item.title}
+                                            src={item.image && item.image !== '[URL]' ? item.image : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'}
+                                            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                                        />
+                                        {item.badge && (
+                                            <Tag color="gold" className="!absolute !top-3 !left-3 !m-0 !font-bold">
+                                                {item.badge}
+                                            </Tag>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
-                        )}
-                    </>
+                                }
+                                styles={{ body: { padding: "1.25rem" } }}
+                            >
+                                <h3 className="text-lg font-bold text-on-background mb-1">{item.title}</h3>
+                                <p className="text-on-surface-variant text-sm line-clamp-2 mb-3 min-h-[2.5rem]">{item.desc}</p>
+                                {item.tags && (
+                                    <div className="mb-4 flex flex-wrap gap-1.5">
+                                        {(typeof item.tags === 'string' ? item.tags.split(',') : item.tags).slice(0, 3).map((tag, index) => (
+                                            <Tag key={index} bordered={false} className="!bg-surface-container !text-on-surface-variant !text-xs">
+                                                {typeof tag === 'string' ? tag.trim() : tag}
+                                            </Tag>
+                                        ))}
+                                    </div>
+                                )}
+                                <div className="flex justify-between items-center pt-3 border-t border-outline-variant/20">
+                                    <span className="text-primary font-bold text-xl">
+                                        {item.price}{String(item.price).includes('đ') ? '' : 'đ'}
+                                    </span>
+                                    <Button
+                                        type="primary"
+                                        ghost
+                                        icon={<Plus size={16} />}
+                                        onClick={() => {
+                                            addToCart(item);
+                                            message.success(`Đã thêm "${item.title}" vào giỏ`);
+                                        }}
+                                        className="!rounded-full"
+                                    >
+                                        Thêm
+                                    </Button>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
                 )}
 
                 {filteredItems.length > 6 && (
                     <div className="flex justify-center mt-12">
-                        <button
-                            onClick={() => setShowAll(!showAll)}
-                            className="border border-gray-400 text-gray-600 hover:text-gray-900 hover:border-gray-900 px-8 py-2.5 rounded-full text-sm font-medium transition-colors"
-                        >
-                            {showAll ? "Thu gọn thực đơn" : "Xem toàn bộ thực đơn"}
-                        </button>
+                        <Button size="large" onClick={() => setShowAll(!showAll)} className="!rounded-full !px-10">
+                            {showAll ? "Thu gọn" : "Xem toàn bộ thực đơn"}
+                        </Button>
                     </div>
                 )}
-            </div>
 
-            <div className="px-6 pb-16">
-                <div className="bg-[#FDF8F5] rounded-3xl p-8 md:p-12 flex flex-col lg:flex-row gap-12 items-center">
-                    <div className="lg:w-1/3 space-y-8">
-                        <h2 className="text-2xl font-bold text-gray-900">Thông Tin Liên Hệ</h2>
-
-                        <div className="flex gap-4">
-                            <div className="bg-[#F8EFEA] p-2.5 rounded-full h-fit text-[#C25E30]">
-                                <MapPin size={20} />
+                {/* Contact */}
+                <section className="mt-16 md:mt-20">
+                    <Card className="!customer-card-muted !border-0">
+                        <div className="flex flex-col lg:flex-row gap-10 lg:gap-14 p-2 md:p-4">
+                            <div className="lg:w-2/5 space-y-6">
+                                <h2 className="text-2xl font-bold text-on-background">Thông tin liên hệ</h2>
+                                {[
+                                    { icon: MapPin, title: "Địa chỉ", text: "123 Đại lộ Ẩm Thực, Q.1\nTP. Hồ Chí Minh" },
+                                    { icon: Clock, title: "Giờ mở cửa", text: "T2–T6: 10:00–22:30\nT7–CN: 09:00–23:30" },
+                                    { icon: Phone, title: "Điện thoại", text: "+84 28 3456 7890" },
+                                ].map(({ icon: Icon, title, text }) => (
+                                    <div key={title} className="flex gap-4">
+                                        <div className="bg-primary-container/50 p-3 rounded-xl h-fit text-primary">
+                                            <Icon size={20} />
+                                        </div>
+                                        <div>
+                                            <h4 className="font-bold text-on-background mb-1">{title}</h4>
+                                            <p className="text-on-surface-variant text-sm whitespace-pre-line">{text}</p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                            <div>
-                                <h4 className="font-bold text-gray-900 mb-1">Địa chỉ</h4>
-                                <p className="text-gray-600 text-sm">123 Đại lộ Ẩm Thực, Quận 1<br />Thành phố Hồ Chí Minh, Việt Nam</p>
+                            <div className="lg:flex-1 h-[280px] md:h-[320px] rounded-2xl bg-surface-container-high relative overflow-hidden flex items-center justify-center">
+                                <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]" />
+                                <Button type="primary" size="large" icon={<Navigation size={18} />} className="!rounded-full relative z-10">
+                                    Chỉ đường
+                                </Button>
                             </div>
                         </div>
-
-                        <div className="flex gap-4">
-                            <div className="bg-[#F8EFEA] p-2.5 rounded-full h-fit text-[#C25E30]">
-                                <Clock size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-gray-900 mb-1">Giờ mở cửa</h4>
-                                <p className="text-gray-600 text-sm">Thứ Hai - Thứ Sáu: 10:00 - 22:30<br />Thứ Bảy - Chủ Nhật: 09:00 - 23:30</p>
-                            </div>
-                        </div>
-
-                        <div className="flex gap-4">
-                            <div className="bg-[#F8EFEA] p-2.5 rounded-full h-fit text-[#C25E30]">
-                                <Phone size={20} />
-                            </div>
-                            <div>
-                                <h4 className="font-bold text-gray-900 mb-1">Điện thoại</h4>
-                                <p className="text-gray-600 text-sm">+84 28 3456 7890</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="lg:w-2/3 w-full h-[300px] bg-[#F2E3D8] rounded-2xl relative overflow-hidden flex items-center justify-center">
-                        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-30"></div>
-                        <div className="text-center z-10">
-                            <div className="text-red-500 mb-2">
-                                <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9C5 14.25 12 22 12 22C12 22 19 14.25 19 9C19 5.13 15.87 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z" />
-                                </svg>
-                            </div>
-                            <button className="bg-[#C25E30] hover:bg-orange-800 text-white px-6 py-2 rounded-full text-sm font-semibold transition-colors flex items-center gap-2 mx-auto">
-                                <Navigation size={16} /> Chỉ đường
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                    </Card>
+                </section>
             </div>
         </div>
     );

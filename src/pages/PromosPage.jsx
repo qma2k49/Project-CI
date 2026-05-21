@@ -1,12 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { message } from "antd";
+import { message, Spin } from "antd";
 import { useCart } from "../contexts/CartContext";
+import CustomerPageShell from "../components/layout/CustomerPageShell";
 import { Tag, Gift, Percent, Copy, Calendar, Sparkles, Clock, ArrowRight } from "lucide-react";
 
 const PROMO_CATEGORIES = ["Tất cả", "Đặt bàn", "Combo món", "Đồ uống", "Thành viên"];
 
-const promos = [
+const createPromos = () => [
     {
         id: "p1",
         category: "Đặt bàn",
@@ -97,9 +98,44 @@ const copyPromoCode = async (code) => {
 };
 
 const PromosPage = () => {
+    const [promos, setPromos] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [loadError, setLoadError] = useState(null);
     const [activeCategory, setActiveCategory] = useState("Tất cả");
     const navigate = useNavigate();
-    const { applyPromoCode } = useCart();
+    const { applyPromoCode, appliedPromo } = useCart();
+
+    useEffect(() => {
+        let cancelled = false;
+
+        const loadPromos = async () => {
+            setIsLoading(true);
+            setLoadError(null);
+
+            try {
+                // Mô phỏng gọi API — thay bằng fetch('/api/promos') khi có backend
+                await new Promise((resolve) => setTimeout(resolve, 400));
+
+                if (cancelled) return;
+
+                setPromos(createPromos());
+            } catch {
+                if (!cancelled) {
+                    setLoadError('Không thể tải danh sách khuyến mãi. Vui lòng thử lại.');
+                }
+            } finally {
+                if (!cancelled) {
+                    setIsLoading(false);
+                }
+            }
+        };
+
+        loadPromos();
+
+        return () => {
+            cancelled = true;
+        };
+    }, []);
 
     const handleUsePromo = (code) => {
         const result = applyPromoCode(code);
@@ -111,25 +147,53 @@ const PromosPage = () => {
         }
     };
 
-    const filteredPromos = promos.filter(
-        (promo) => activeCategory === "Tất cả" || promo.category === activeCategory
+    const filteredPromos = useMemo(
+        () => promos.filter(
+            (promo) => activeCategory === "Tất cả" || promo.category === activeCategory
+        ),
+        [promos, activeCategory]
     );
-    const featuredPromo = promos.find((p) => p.featured);
+
+    const featuredPromo = useMemo(
+        () => promos.find((p) => p.featured),
+        [promos]
+    );
 
     return (
-        <div className="font-body-md bg-[#FAF9F6] w-full max-w-7xl mx-auto px-6 md:px-12 py-10 pb-24 md:pb-10">
-            {/* Header */}
-            <div className="mb-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDF0E9] text-[#C25E30] text-sm font-semibold mb-4">
-                    <Sparkles size={16} />
-                    Ưu đãi độc quyền
+        <CustomerPageShell
+            eyebrow={<><Sparkles size={16} className="inline mr-1" /> Ưu đãi độc quyền</>}
+            title="Khuyến mãi & Promos"
+            description="Sao chép mã hoặc áp dụng trực tiếp vào hóa đơn khi thanh toán."
+        >
+            {appliedPromo && !isLoading && (
+                <div className="mb-6 p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-sm text-emerald-800">
+                    Mã <span className="font-mono font-bold">{appliedPromo.code}</span> đang được áp dụng trên hóa đơn.{' '}
+                    <Link to="/checkout" className="font-semibold text-[#C25E30] hover:underline">Xem checkout →</Link>
                 </div>
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Khuyến mãi & Promos</h1>
-                <p className="text-gray-500 max-w-2xl">
-                    Khám phá các chương trình ưu đãi dành riêng cho thực khách. Sao chép mã và áp dụng khi đặt bàn hoặc thanh toán.
-                </p>
-            </div>
+            )}
 
+            {isLoading && (
+                <div className="flex flex-col items-center justify-center min-h-[320px] gap-3 mb-10">
+                    <Spin size="large" />
+                    <p className="text-sm text-gray-500">Đang tải khuyến mãi...</p>
+                </div>
+            )}
+
+            {loadError && !isLoading && (
+                <div className="flex flex-col items-center justify-center min-h-[280px] gap-3 mb-10 text-center">
+                    <p className="text-sm text-red-600">{loadError}</p>
+                    <button
+                        type="button"
+                        onClick={() => window.location.reload()}
+                        className="text-sm font-semibold text-[#C25E30] hover:underline"
+                    >
+                        Tải lại
+                    </button>
+                </div>
+            )}
+
+            {!isLoading && !loadError && (
+            <>
             {/* Featured banner */}
             {featuredPromo && (
                 <div className="relative mb-10 rounded-2xl overflow-hidden bg-gradient-to-r from-[#8B3A00] via-[#C25E30] to-[#E07A3A] p-6 md:p-10 text-white shadow-lg">
@@ -183,11 +247,7 @@ const PromosPage = () => {
                         key={cat}
                         type="button"
                         onClick={() => setActiveCategory(cat)}
-                        className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                            activeCategory === cat
-                                ? "bg-[#C25E30] text-white"
-                                : "bg-[#F8EFEA] text-[#C25E30] hover:bg-[#F2E3D8]"
-                        }`}
+                        className={activeCategory === cat ? "customer-chip-active" : "customer-chip-inactive"}
                     >
                         {cat}
                     </button>
@@ -199,7 +259,7 @@ const PromosPage = () => {
                 {filteredPromos.map((promo) => (
                     <article
                         key={promo.id}
-                        className="bg-white rounded-2xl border border-gray-100 shadow-[0px_4px_20px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col hover:shadow-md transition-shadow"
+                        className="customer-card overflow-hidden flex flex-col hover:shadow-md transition-shadow"
                     >
                         <div className="h-2 bg-gradient-to-r from-[#C25E30] to-[#E07A3A]" />
                         <div className="p-6 flex flex-col flex-1">
@@ -266,7 +326,9 @@ const PromosPage = () => {
                     </span>
                 </p>
             </div>
-        </div>
+            </>
+            )}
+        </CustomerPageShell>
     );
 };
 

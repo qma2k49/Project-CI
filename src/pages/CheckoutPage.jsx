@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { CalendarIcon, Plus, Minus, Tag, X } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { message } from "antd";
+import { message, Button, Input, Card, Empty } from "antd";
 import { useCart, calcPromoDiscount } from "../contexts/CartContext";
+import CustomerPageShell from "../components/layout/CustomerPageShell";
 
 const OCCUPIED_TABLE_IDS_KEY = 'occupiedTableIds';
 
@@ -122,29 +123,31 @@ const CheckoutPage = () => {
 
     if (cartItems.length === 0 && !hasReservation) {
         return (
-            <div className="font-body-md bg-[#FAF9F6] w-full max-w-7xl mx-auto px-6 md:px-12 py-20 text-center min-h-[60vh] flex flex-col items-center justify-center">
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">Giỏ hàng của bạn đang trống</h1>
-                <p className="text-gray-500 mb-8">Hãy quay lại thực đơn để chọn những món ăn tuyệt vời nhé!</p>
-                <Link to="/">
-                    <button type="button" className="bg-[#C25E30] hover:bg-orange-800 text-white px-8 py-3 rounded-full font-semibold transition-colors">
-                        Xem thực đơn
-                    </button>
-                </Link>
-            </div>
+            <CustomerPageShell title="Giỏ hàng trống">
+                <Empty
+                    description="Chưa có món hoặc đặt bàn nào trong giỏ"
+                    className="py-16"
+                >
+                    <Link to="/">
+                        <Button type="primary" size="large" className="!rounded-full">
+                            Xem thực đơn
+                        </Button>
+                    </Link>
+                </Empty>
+            </CustomerPageShell>
         );
     }
 
     return (
-        <div className="font-body-md bg-[#FAF9F6] w-full max-w-7xl mx-auto px-6 md:px-12 py-10">
-            <div className="mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Giỏ hàng & Xác nhận</h1>
-                <p className="text-gray-500">Vui lòng kiểm tra lại đơn hàng và điền thông tin để hoàn tất.</p>
-            </div>
-
+        <CustomerPageShell
+            eyebrow="Thanh toán"
+            title="Giỏ hàng & xác nhận"
+            description="Kiểm tra đơn hàng, áp mã khuyến mãi và hoàn tất đặt bàn."
+        >
             <div className="flex flex-col lg:flex-row gap-8 items-start">
                 <div className="lg:w-2/3 space-y-8 w-full">
                     {hasReservation && (
-                        <div className="bg-white rounded-2xl p-4 md:p-6 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
+                        <Card className="!customer-card">
                             <div className="flex items-center justify-between gap-4">
                                 <div className="flex items-start gap-4">
                                     <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-[#FDF0E9] border border-[#F2E3D8] flex items-center justify-center text-[#C25E30] font-bold">B</div>
@@ -166,11 +169,10 @@ const CheckoutPage = () => {
                                     Hủy
                                 </button>
                             </div>
-                        </div>
+                        </Card>
                     )}
 
-                    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Danh sách món ăn</h2>
+                    <Card className="!customer-card" title={<span className="text-xl font-bold">Danh sách món ăn</span>}>
                         <div className="space-y-8">
                             {cartItems.map((item, index) => (
                                 <div key={item.id} className={`${index !== 0 ? 'pt-8 border-t border-gray-100' : ''}`}>
@@ -221,45 +223,29 @@ const CheckoutPage = () => {
                                 </div>
                             ))}
                         </div>
-                    </div>
+                    </Card>
 
-                    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-gray-100">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b border-gray-100 pb-4">Thông tin khách hàng</h2>
-                        <div className="space-y-5">
+                    <Card className="!customer-card" title={<span className="text-xl font-bold">Thông tin khách hàng</span>}>
+                        <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-bold text-gray-900 mb-2">Họ và Tên</label>
-                                <input
-                                    type="text"
-                                    placeholder="VD: Nguyễn Văn A"
-                                    className="w-full bg-[#FDF8F5] border border-[#EEDFCC] rounded-lg px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#C25E30] transition-colors"
-                                />
+                                <label className="block text-sm font-bold text-on-background mb-2">Họ và Tên</label>
+                                <Input size="large" placeholder="VD: Nguyễn Văn A" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-900 mb-2">Số điện thoại</label>
-                                <input
-                                    type="tel"
-                                    placeholder="090 123 4567"
-                                    className="w-full bg-[#FDF8F5] border border-[#EEDFCC] rounded-lg px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#C25E30] transition-colors"
-                                />
+                                <label className="block text-sm font-bold text-on-background mb-2">Số điện thoại</label>
+                                <Input size="large" placeholder="090 123 4567" />
                             </div>
                             <div>
-                                <label className="block text-sm font-bold text-gray-900 mb-2">Yêu cầu đặc biệt cho nhà hàng</label>
-                                <textarea
-                                    rows={4}
-                                    placeholder="Ghi chú về vị trí bàn, dị ứng, hoặc các yêu cầu khác..."
-                                    className="w-full bg-[#FDF8F5] border border-[#EEDFCC] rounded-lg px-4 py-3 text-sm text-gray-700 outline-none focus:border-[#C25E30] transition-colors resize-none"
-                                />
+                                <label className="block text-sm font-bold text-on-background mb-2">Yêu cầu đặc biệt</label>
+                                <Input.TextArea rows={4} placeholder="Ghi chú về bàn, dị ứng..." />
                             </div>
                         </div>
-                    </div>
+                    </Card>
                 </div>
 
                 <div className="lg:w-1/3 w-full">
-                    <div className="bg-white rounded-2xl p-6 md:p-8 shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 sticky top-24">
-                        <h2 className="text-2xl font-bold text-gray-900 mb-6">Tổng hóa đơn</h2>
-
-                        {/* Mã khuyến mãi */}
-                        <div className="mb-6 pb-6 border-b border-gray-100">
+                    <Card className="!customer-card sticky top-24" title={<span className="text-xl font-bold">Tổng hóa đơn</span>}>
+                        <div className="mb-6 pb-6 border-b border-outline-variant/20">
                             <label className="flex items-center gap-2 text-sm font-bold text-gray-900 mb-3">
                                 <Tag size={16} className="text-[#C25E30]" />
                                 Mã khuyến mãi
@@ -289,21 +275,17 @@ const CheckoutPage = () => {
                                 </div>
                             ) : (
                                 <div className="flex gap-2">
-                                    <input
-                                        type="text"
+                                    <Input
                                         value={promoInput}
                                         onChange={(e) => setPromoInput(e.target.value.toUpperCase())}
-                                        onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}
-                                        placeholder="Nhập mã (VD: WEEKEND20)"
-                                        className="flex-1 bg-[#FDF8F5] border border-[#EEDFCC] rounded-lg px-3 py-2.5 text-sm font-mono outline-none focus:border-[#C25E30]"
+                                        onPressEnter={handleApplyPromo}
+                                        placeholder="WEEKEND20"
+                                        className="!font-mono flex-1"
+                                        size="large"
                                     />
-                                    <button
-                                        type="button"
-                                        onClick={handleApplyPromo}
-                                        className="px-4 py-2.5 bg-[#C25E30] hover:bg-orange-800 text-white rounded-lg text-sm font-bold transition-colors shrink-0"
-                                    >
+                                    <Button type="primary" size="large" onClick={handleApplyPromo}>
                                         Áp dụng
-                                    </button>
+                                    </Button>
                                 </div>
                             )}
                             <Link to="/promos" className="inline-block mt-2 text-xs text-[#C25E30] font-medium hover:underline">
@@ -342,22 +324,25 @@ const CheckoutPage = () => {
                             <span className="text-2xl font-bold text-[#C25E30]">{formatCurrency(total)}</span>
                         </div>
 
-                        <button
-                            type="button"
+                        <Button
+                            type="primary"
+                            size="large"
+                            block
                             onClick={handlePlaceOrder}
-                            className="w-full bg-[#C25E30] hover:bg-orange-800 text-white py-4 rounded-xl font-bold transition-colors flex items-center justify-center gap-2 mb-4"
+                            icon={<CalendarIcon size={18} />}
+                            className="!h-12 !mb-4 !font-bold"
                         >
-                            <CalendarIcon size={18} /> Xác nhận đặt bàn & Món
-                        </button>
+                            Xác nhận đặt bàn & món
+                        </Button>
 
-                        <p className="text-center text-xs text-gray-500">
+                        <p className="text-center text-xs text-on-surface-variant">
                             Bằng việc xác nhận, bạn đồng ý với{' '}
-                            <a href="#" className="text-[#C25E30] hover:underline">Điều khoản dịch vụ</a> của chúng tôi.
+                            <a href="#" className="text-primary hover:underline">Điều khoản dịch vụ</a>.
                         </p>
-                    </div>
+                    </Card>
                 </div>
             </div>
-        </div>
+        </CustomerPageShell>
     );
 };
 

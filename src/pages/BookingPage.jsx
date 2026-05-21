@@ -1,8 +1,9 @@
 import { CalendarDays, Clock, Users, ArrowRight, LayoutTemplate } from "lucide-react";
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import { message, Spin } from "antd";
+import { message, Spin, Button, InputNumber } from "antd";
 import { useCart } from "../contexts/CartContext";
+import CustomerPageShell from "../components/layout/CustomerPageShell";
 
 const OCCUPIED_TABLE_IDS_KEY = 'occupiedTableIds';
 
@@ -223,20 +224,18 @@ const BookingPage = () => {
     const selectedTables = allTables.filter((t) => selectedTableIds.includes(t.id));
 
     return (
-        <div className="font-body-md bg-[#FAF9F6] w-full max-w-7xl mx-auto px-6 md:px-12 py-10">
-            <div className="mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-2">Đặt bàn trực tuyến</h1>
-                <p className="text-gray-500">Tận hưởng trải nghiệm ẩm thực tinh tế. Vui lòng hoàn tất các bước bên dưới.</p>
-            </div>
-
+        <CustomerPageShell
+            eyebrow="Đặt chỗ"
+            title="Đặt bàn trực tuyến"
+            description="Chọn bàn trên sơ đồ, xác nhận thời gian và tiếp tục thanh toán."
+        >
             <div className="flex flex-col lg:flex-row gap-8">
-                {/* Sơ đồ bàn */}
-                <div className="lg:w-2/3 bg-white rounded-2xl shadow-[0px_4px_20px_rgba(0,0,0,0.03)] border border-gray-100 overflow-hidden">
+                <div className="lg:w-2/3 customer-card overflow-hidden">
                     <div className="px-6 pt-6 pb-4">
                         <h2 className="text-2xl font-bold text-gray-900">Sơ đồ bàn ăn</h2>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-3 bg-slate-100 border-y border-slate-200 text-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-6 py-3 bg-surface-container-low border-y border-outline-variant/25 text-sm">
                         <p className="text-gray-700 leading-relaxed">
                             <span className="font-medium">Toàn bộ nhà hàng:</span>{' '}
                             Trống {stats.freeAll}/{allTables.length} bàn · {stats.totalSeats} ghế
@@ -320,7 +319,7 @@ const BookingPage = () => {
 
                 {/* Tóm tắt */}
                 <div className="lg:w-1/3">
-                    <div className="bg-[#FAF9F6] rounded-2xl p-6 border border-[#EEDFCC]">
+                    <div className="customer-card-muted p-6 sticky top-24">
                         <h2 className="text-xl font-bold text-gray-900 border-b border-gray-200 pb-4 mb-6">Tóm tắt Đặt bàn</h2>
 
                         <div className="space-y-6 mb-8">
@@ -342,12 +341,13 @@ const BookingPage = () => {
                                 <Users className="text-gray-500 mt-0.5" size={20} />
                                 <div>
                                     <p className="text-sm text-gray-500 mb-1">Số lượng khách</p>
-                                    <input
-                                        type="number"
-                                        min="1"
+                                    <InputNumber
+                                        min={1}
+                                        max={20}
                                         value={guests}
-                                        onChange={(e) => setGuests(parseInt(e.target.value) || "")}
-                                        className="font-bold text-gray-900 border border-gray-300 rounded-md py-1 px-2 focus:outline-none focus:ring-2 focus:ring-[#C25E30]"
+                                        onChange={(v) => setGuests(v || 1)}
+                                        size="large"
+                                        className="!w-28"
                                     />
                                 </div>
                             </div>
@@ -374,26 +374,25 @@ const BookingPage = () => {
                         )}
 
                         <div className="space-y-3">
-                            <button
-                                type="button"
-                                onClick={handleConfirm}
+                            <Button
+                                type="primary"
+                                size="large"
+                                block
                                 disabled={isMapLoading}
-                                className="w-full bg-[#C25E30] hover:bg-orange-800 disabled:opacity-50 disabled:cursor-not-allowed text-white py-3.5 rounded-lg font-bold transition-colors flex items-center justify-center gap-2"
+                                onClick={handleConfirm}
+                                icon={<ArrowRight size={18} />}
+                                className="!h-12 !font-bold"
                             >
-                                Tiếp tục Xác nhận <ArrowRight size={18} />
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => navigate('/')}
-                                className="w-full bg-white border border-[#C25E30] text-[#C25E30] hover:bg-orange-50 py-3.5 rounded-lg font-bold transition-colors"
-                            >
-                                Quay lại Trang Chủ
-                            </button>
+                                Tiếp tục xác nhận
+                            </Button>
+                            <Button size="large" block onClick={() => navigate('/')}>
+                                Quay lại trang chủ
+                            </Button>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </CustomerPageShell>
     );
 };
 
