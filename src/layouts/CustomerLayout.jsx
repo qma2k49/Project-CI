@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
-import CustomerTopNav from "../components/layout/CustomerTopNav";
-import CustomerFooter from "../components/layout/CustomerFooter";
-import CustomerBottomNav from "../components/layout/CustomerBottomNav";
+import CustomerTopNav from "../components/CustomerTopNav";
+import CustomerFooter from "../components/CustomerFooter";
+import CustomerBottomNav from "../components/CustomerBottomNav";
 
 const CustomerLayout = () => {
     return (

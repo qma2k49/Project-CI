@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { Badge } from "antd";
-import { useCart } from "../../contexts/CartContext";
+import { useCart } from "../contexts/CartContext";
 
 const TABS = [
     { to: "/", label: "Menu", icon: "restaurant_menu" },

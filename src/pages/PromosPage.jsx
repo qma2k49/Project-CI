@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { message, Spin } from "antd";
 import { useCart } from "../contexts/CartContext";
-import CustomerPageShell from "../components/layout/CustomerPageShell";
+import CustomerPageShell from "../components/CustomerPageShell";
 import { Tag, Gift, Percent, Copy, Calendar, Sparkles, Clock, ArrowRight } from "lucide-react";
 
 const PROMO_CATEGORIES = ["Tất cả", "Đặt bàn", "Combo món", "Đồ uống", "Thành viên"];

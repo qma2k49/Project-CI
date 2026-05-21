@@ -3,7 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { message, Spin, Button, InputNumber } from "antd";
 import { useCart } from "../contexts/CartContext";
-import CustomerPageShell from "../components/layout/CustomerPageShell";
+import CustomerPageShell from "../components/CustomerPageShell";
 
 const OCCUPIED_TABLE_IDS_KEY = 'occupiedTableIds';
 

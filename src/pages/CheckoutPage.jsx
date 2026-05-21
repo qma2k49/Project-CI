@@ -3,7 +3,7 @@ import { CalendarIcon, Plus, Minus, Tag, X } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { message, Button, Input, Card, Empty } from "antd";
 import { useCart, calcPromoDiscount } from "../contexts/CartContext";
-import CustomerPageShell from "../components/layout/CustomerPageShell";
+import CustomerPageShell from "../components/CustomerPageShell";
 
 const OCCUPIED_TABLE_IDS_KEY = 'occupiedTableIds';
 

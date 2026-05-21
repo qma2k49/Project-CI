@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Modal, Input, Badge, Button } from "antd";
-import { ShoppingCart, UtensilsCrossed, CalendarDays, Tag, Shield } from "lucide-react";
-import { useCart } from "../../contexts/CartContext";
+import { Link, useLocation } from "react-router-dom";
+import { Badge, Button } from "antd";
+import { ShoppingCart, UtensilsCrossed, CalendarDays, Tag } from "lucide-react";
+import { useCart } from "../contexts/CartContext";
 
 const NAV_ITEMS = [
     { to: "/", label: "Thực đơn", icon: UtensilsCrossed },
@@ -11,9 +11,6 @@ const NAV_ITEMS = [
 ];
 
 const CustomerTopNav = () => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [password, setPassword] = useState("");
-    const navigate = useNavigate();
     const location = useLocation();
     const { cartCount } = useCart();
 
@@ -22,17 +19,7 @@ const CustomerTopNav = () => {
         return location.pathname.startsWith(path);
     };
 
-    const handleOk = () => {
-        if (password === "admin123") {
-            localStorage.setItem("isAdmin", "true");
-            Modal.success({ title: "Đăng nhập thành công", content: "Chuyển đến trang quản trị." });
-            setIsModalOpen(false);
-            setPassword("");
-            navigate("/admin");
-        } else {
-            Modal.error({ title: "Mật khẩu không đúng", content: "Vui lòng thử lại." });
-        }
-    };
+
 
     return (
         <header className="sticky top-0 z-50 w-full border-b border-outline-variant/30 bg-white/80 backdrop-blur-xl supports-[backdrop-filter]:bg-white/70">
@@ -91,50 +78,11 @@ const CustomerTopNav = () => {
                         )}
                     </Link>
 
-                    <Button
-                        type="text"
-                        size="small"
-                        icon={<Shield size={16} />}
-                        onClick={() => setIsModalOpen(true)}
-                        className="!text-on-surface-variant hover:!text-primary !font-medium hidden sm:inline-flex"
-                    >
-                        Admin
-                    </Button>
-                    <Button
-                        type="text"
-                        shape="circle"
-                        icon={<Shield size={18} />}
-                        onClick={() => setIsModalOpen(true)}
-                        className="sm:!hidden !text-on-surface-variant"
-                        aria-label="Admin"
-                    />
+
                 </div>
             </nav>
 
-            <Modal
-                title="Xác thực quản trị"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={() => {
-                    setIsModalOpen(false);
-                    setPassword("");
-                }}
-                okText="Xác nhận"
-                cancelText="Hủy"
-                centered
-                destroyOnClose
-            >
-                <p className="text-on-surface-variant text-sm mb-4">
-                    Nhập mật khẩu để truy cập bảng điều khiển nhà hàng.
-                </p>
-                <Input.Password
-                    placeholder="Mật khẩu admin"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    onPressEnter={handleOk}
-                    size="large"
-                />
-            </Modal>
+
         </header>
     );
 };
