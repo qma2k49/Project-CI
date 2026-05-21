@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 
 const CartContext = createContext();
 
-export const PROMO_CATALOG = [
+const PROMO_CATALOG = [
     { code: 'WEEKEND20', title: 'Cuối tuần sang trọng', type: 'percent', value: 20, minSpend: 500000 },
     { code: 'COMBO2', title: 'Combo đôi tinh tế', type: 'fixed', value: 80000, minSpend: 400000 },
     { code: 'HAPPY30', title: 'Happy Hour 14h–17h', type: 'percent', value: 30, minSpend: 0 },
@@ -11,7 +11,7 @@ export const PROMO_CATALOG = [
     { code: 'BIRTHDAY', title: 'Sinh nhật đặc biệt', type: 'gift', value: 0, minSpend: 0 },
 ];
 
-export const calcPromoDiscount = (subtotal, promo) => {
+const calcPromoDiscount = (subtotal, promo) => {
     if (!promo || subtotal < promo.minSpend) return 0;
     if (promo.type === 'gift') return 0;
     if (promo.type === 'percent') return Math.floor(subtotal * promo.value / 100);
@@ -19,7 +19,7 @@ export const calcPromoDiscount = (subtotal, promo) => {
     return 0;
 };
 
-export const useCart = () => {
+const useCart = () => {
     const context = useContext(CartContext);
     if (!context) {
         throw new Error('useCart must be used within a CartProvider');
@@ -27,7 +27,7 @@ export const useCart = () => {
     return context;
 };
 
-export const CartProvider = ({ children }) => {
+const CartProvider = ({ children }) => {
     const [cartItems, setCartItems] = useState(() => {
         try {
             const stored = localStorage.getItem('cartItems');
@@ -158,3 +158,5 @@ export const CartProvider = ({ children }) => {
 
     return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
+
+export { calcPromoDiscount, useCart, CartProvider, PROMO_CATALOG }
