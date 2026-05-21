@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { CalendarIcon, Plus, Minus, Tag, X } from "lucide-react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { message, Button, Input, Card, Empty } from "antd";
+import { message, Button, Input, Card, Empty, Spin } from "antd";
 import { useCart, calcPromoDiscount } from "../contexts/CartContext";
 import CustomerPageShell from "../components/CustomerPageShell";
 
@@ -35,6 +35,7 @@ const CheckoutPage = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const [promoInput, setPromoInput] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     const reservationTables = tableReservation?.tables ?? (tableReservation ? [tableReservation] : []);
     const hasReservation = reservationTables.length > 0;
@@ -47,6 +48,13 @@ const CheckoutPage = () => {
             message.success(`Đã áp mã ${result.promo.code}`);
         }
     }, [searchParams, applyPromoCode]);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsLoading(false);
+        }, 2000);
+        return () => clearTimeout(timer);
+    }, []);
 
     const parsePrice = (priceStr) => {
         if (!priceStr) return 0;
@@ -120,6 +128,17 @@ const CheckoutPage = () => {
         message.success('Đặt bàn và món thành công!');
         navigate('/');
     };
+
+    if (isLoading) {
+        return (
+            <CustomerPageShell title="Đang tải giỏ hàng...">
+                <div className="flex flex-col items-center justify-center min-h-[320px] gap-3">
+                    <Spin size="large" />
+                    <p className="text-sm text-gray-500">Đang chuẩn bị thông tin đơn hàng...</p>
+                </div>
+            </CustomerPageShell>
+        );
+    }
 
     if (cartItems.length === 0 && !hasReservation) {
         return (
