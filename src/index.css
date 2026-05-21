@@ -124,7 +124,7 @@
   font-variation-settings: 'FILL' 1;
 }
 
-.ambient-shadow {
+@utility ambient-shadow {
   box-shadow: 0px 4px 20px rgba(45, 52, 54, 0.08);
 }
 
