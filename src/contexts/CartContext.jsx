@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from 'react';
+import { createContext, useContext, useState, useCallback, useEffect } from 'react';
 
 const CartContext = createContext();
 
@@ -28,9 +28,62 @@ export const useCart = () => {
 };
 
 export const CartProvider = ({ children }) => {
-    const [cartItems, setCartItems] = useState([]);
-    const [tableReservation, setTableReservation] = useState(null);
-    const [appliedPromo, setAppliedPromo] = useState(null);
+    const [cartItems, setCartItems] = useState(() => {
+        try {
+            const stored = localStorage.getItem('cartItems');
+            return stored ? JSON.parse(stored) : [];
+        } catch {
+            return [];
+        }
+    });
+    const [tableReservation, setTableReservation] = useState(() => {
+        try {
+            const stored = localStorage.getItem('tableReservation');
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    });
+    const [appliedPromo, setAppliedPromo] = useState(() => {
+        try {
+            const stored = localStorage.getItem('appliedPromo');
+            return stored ? JSON.parse(stored) : null;
+        } catch {
+            return null;
+        }
+    });
+
+    useEffect(() => {
+        try {
+            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+        } catch (e) {
+            console.error('Failed to save cartItems to localStorage', e);
+        }
+    }, [cartItems]);
+
+    useEffect(() => {
+        try {
+            if (tableReservation) {
+                localStorage.setItem('tableReservation', JSON.stringify(tableReservation));
+            } else {
+                localStorage.removeItem('tableReservation');
+            }
+        } catch (e) {
+            console.error('Failed to save tableReservation to localStorage', e);
+        }
+    }, [tableReservation]);
+
+    useEffect(() => {
+        try {
+            if (appliedPromo) {
+                localStorage.setItem('appliedPromo', JSON.stringify(appliedPromo));
+            } else {
+                localStorage.removeItem('appliedPromo');
+            }
+        } catch (e) {
+            console.error('Failed to save appliedPromo to localStorage', e);
+        }
+    }, [appliedPromo]);
 
     const addToCart = (item) => {
         setCartItems((prevItems) => {
